@@ -81,4 +81,4 @@ class ReservedTicket(Base):
         return "<User( '%s', '%s', '%s')>" % (str(self.id), str(self.id_ticket), str(self.id_user))
 
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
