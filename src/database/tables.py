@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
-engine = create_engine("mysql+mysqlconnector://root:myrootpassword@localhost/ticket_office", echo=True)
+engine = create_engine("mysql+mysqlconnector://root:myrootpassword@localhost/mydb", echo=True)
 
 Base = declarative_base()
 
@@ -42,7 +42,7 @@ class Ticket(Base):
 
 
 class BoughtTicket(Base):
-    __tablename__ = 'Bought_Ticket_User'
+    __tablename__ = 'Bought_Ticket'
 
     id = Column(Integer, primary_key=True)
     id_ticket = Column(Integer, ForeignKey("Ticket.id"), nullable=False)
@@ -53,7 +53,7 @@ class BoughtTicket(Base):
 
 
 class ReservedTicket(Base):
-    __tablename__ = 'Reserved_Ticket_User'
+    __tablename__ = 'Reserved_Ticket'
 
     id = Column(Integer, primary_key=True)
     id_ticket = Column(Integer, ForeignKey("Ticket.id"), nullable=False)
