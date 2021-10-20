@@ -19,6 +19,11 @@ class User(Base):
     password = Column(String(250), nullable=False)
     permissions = Column(String(250), nullable=False)
 
+    def __repr__(self):
+        return "<User( '%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (str(self.id), self.nickname, self.name,
+                                                                      self.surname, self.email, self.password,
+                                                                      self.permissions)
+
 
 class Event(Base):
     __tablename__ = 'Event'
@@ -28,6 +33,11 @@ class Event(Base):
     description = Column(String(500), nullable=False)
     location = Column(String(250), nullable=False)
     date = Column(DateTime, nullable=False)
+
+    def __repr__(self):
+        return "<User( '%s', '%s', '%s', '%s', '%s')>" % (str(self.id), self.name, self.description, self.location,
+                                                          str(self.date))
+
 
 
 class Ticket(Base):
@@ -40,6 +50,9 @@ class Ticket(Base):
 
     Event = relationship("Event")
 
+    def __repr__(self):
+        return "<User( '%s', '%s', '%s', '%s')>" % (str(self.id), str(self.id_event), str(self.price), self.status)
+
 
 class BoughtTicket(Base):
     __tablename__ = 'Bought_Ticket'
@@ -51,6 +64,8 @@ class BoughtTicket(Base):
     Ticket = relationship("Ticket")
     User = relationship("User")
 
+    def __repr__(self):
+        return "<User( '%s', '%s', '%s')>" % (str(self.id), str(self.id_ticket), str(self.id_user))
 
 class ReservedTicket(Base):
     __tablename__ = 'Reserved_Ticket'
@@ -61,6 +76,9 @@ class ReservedTicket(Base):
 
     Ticket = relationship("Ticket")
     User = relationship("User")
+
+    def __repr__(self):
+        return "<User( '%s', '%s', '%s')>" % (str(self.id), str(self.id_ticket), str(self.id_user))
 
 
 Base.metadata.create_all(engine)
