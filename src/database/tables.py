@@ -20,9 +20,8 @@ class User(Base):
     permissions = Column(String(250), nullable=False)
 
     def __repr__(self):
-        return "<User( '%s', '%s', '%s', '%s', '%s', '%s', '%s')>" % (str(self.id), self.nickname, self.name,
-                                                                      self.surname, self.email, self.password,
-                                                                      self.permissions)
+        return f"< User: {str(self.id)}, {self.nickname}, {self.name}, {self.surname}, " \
+               f"{self.email}, {self.password}, {self.permissions} >"
 
 
 class Event(Base):
@@ -35,9 +34,7 @@ class Event(Base):
     date = Column(DateTime, nullable=False)
 
     def __repr__(self):
-        return "<User( '%s', '%s', '%s', '%s', '%s')>" % (str(self.id), self.name, self.description, self.location,
-                                                          str(self.date))
-
+        return f"< Event: {str(self.id)}, {self.name}, {self.description}, {self.location}, {str(self.date)} >"
 
 
 class Ticket(Base):
@@ -51,7 +48,7 @@ class Ticket(Base):
     Event = relationship("Event")
 
     def __repr__(self):
-        return "<User( '%s', '%s', '%s', '%s')>" % (str(self.id), str(self.id_event), str(self.price), self.status)
+        return f"< Ticket: {str(self.id)}, {str(self.id_event)}, {str(self.price)}, {self.status} >"
 
 
 class BoughtTicket(Base):
@@ -65,7 +62,8 @@ class BoughtTicket(Base):
     User = relationship("User")
 
     def __repr__(self):
-        return "<User( '%s', '%s', '%s')>" % (str(self.id), str(self.id_ticket), str(self.id_user))
+        return f"< BoughtTicket: {str(self.id)}, {str(self.id_ticket)}, {str(self.id_user)} >"
+
 
 class ReservedTicket(Base):
     __tablename__ = 'Reserved_Ticket'
@@ -78,7 +76,7 @@ class ReservedTicket(Base):
     User = relationship("User")
 
     def __repr__(self):
-        return "<User( '%s', '%s', '%s')>" % (str(self.id), str(self.id_ticket), str(self.id_user))
+        return f"< ReservedTicket: {str(self.id)}, {str(self.id_ticket)}, {str(self.id_user)} >"
 
 
 # Base.metadata.create_all(engine)
