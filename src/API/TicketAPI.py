@@ -55,8 +55,15 @@ def post_new_bought_ticket(ticket_id):
         if not ticket:
             return 'Invalid ID supplied', 401
 
-        if not ticket.status == 'valid':
-            return 'Ticket is invalid', 402
+        if ticket.status == 'bought':
+            return 'Ticket is bought', 402
+
+        if ticket.status == 'reserved':
+            reserved_ticket = ReservedTicket.query.filter(ReservedTicket.id_ticket == ticket_id).first()
+            if not reserved_ticket.id_user == user_id:
+                return 'Ticket is reserved', 405
+            session.delete(reserved_ticket)
+            session.commit()
 
         new_bought_ticket = BoughtTicket(id_ticket=ticket_id, id_user=user_id)
         session.add(new_bought_ticket)
@@ -133,7 +140,7 @@ def delete_reserved_ticket(ticket_id):
                                                       ReservedTicket.id_ticket == ticket_id).first()
 
         if not reserved_ticket:
-            return 'Invalid ID supplied', 402
+            return 'You do not have reservation', 402
 
         ticket = Ticket.query.filter(Ticket.id == ticket_id).first()
         ticket.status = 'valid'
