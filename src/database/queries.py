@@ -1,5 +1,3 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from tables import *
 
 session = sessionmaker(bind=engine)
