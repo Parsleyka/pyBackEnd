@@ -46,9 +46,9 @@ class User(Base):
             raise Exception('No user')
         return user
 
-    def __repr__(self):
-        return f"< User: {str(self.id)}, {self.nickname}, {self.name}, {self.surname}, " \
-               f"{self.email}, {self.password}, {self.permissions} >"
+    # def __repr__(self):
+    #     return f"< User: {str(self.id)}, {self.nickname}, {self.name}, {self.surname}, " \
+    #            f"{self.email}, {self.password}, {self.permissions} >"
 
 
 class Event(Base):
@@ -60,8 +60,8 @@ class Event(Base):
     location = Column(String(250), nullable=False)
     date = Column(DateTime, nullable=False)
 
-    def __repr__(self):
-        return f"< Event: {str(self.id)}, {self.name}, {self.description}, {self.location}, {str(self.date)} >"
+    # def __repr__(self):
+    #     return f"< Event: {str(self.id)}, {self.name}, {self.description}, {self.location}, {str(self.date)} >"
 
 
 class Ticket(Base):
@@ -74,8 +74,8 @@ class Ticket(Base):
 
     Event = relationship("Event")
 
-    def __repr__(self):
-        return f"< Ticket: {str(self.id)}, {str(self.id_event)}, {str(self.price)}, {self.status} >"
+    # def __repr__(self):
+    #     return f"< Ticket: {str(self.id)}, {str(self.id_event)}, {str(self.price)}, {self.status} >"
 
 
 class BoughtTicket(Base):
@@ -88,8 +88,8 @@ class BoughtTicket(Base):
     Ticket = relationship("Ticket")
     User = relationship("User")
 
-    def __repr__(self):
-        return f"< BoughtTicket: {str(self.id)}, {str(self.id_ticket)}, {str(self.id_user)} >"
+    # def __repr__(self):
+    #     return f"< BoughtTicket: {str(self.id)}, {str(self.id_ticket)}, {str(self.id_user)} >"
 
 
 class ReservedTicket(Base):
@@ -102,8 +102,8 @@ class ReservedTicket(Base):
     Ticket = relationship("Ticket")
     User = relationship("User")
 
-    def __repr__(self):
-        return f"< ReservedTicket: {str(self.id)}, {str(self.id_ticket)}, {str(self.id_user)} >"
+    # def __repr__(self):
+    #     return f"< ReservedTicket: {str(self.id)}, {str(self.id_ticket)}, {str(self.id_user)} >"
 
 
 # Base.metadata.create_all(engine)

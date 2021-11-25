@@ -21,7 +21,7 @@ class EventAPI(Resource):
                 })
             return jsonify(serialised), 200
         except Exception:
-            return 'Unsuccessful operation', 403
+            return jsonify('Unsuccessful operation'), 403
 
     @jwt_required()
     def post(self):
@@ -29,15 +29,15 @@ class EventAPI(Resource):
             user_id = get_jwt_identity()
             user = User.query.filter(User.id == user_id).first()
             if not user.permissions == 'admin':
-                return 'Do not have permissions', 401
+                return jsonify('Do not have permissions'), 401
 
             new_event = Event(**request.json)
             session.add(new_event)
             session.commit()
             session.close()
-            return 'Successful operation', 200
+            return jsonify('Successful operation'), 200
         except Exception:
-            return 'Unsuccessful operation', 403
+            return jsonify('Unsuccessful operation'), 403
 
 
 class EventParamAPI(Resource):
@@ -47,21 +47,21 @@ class EventParamAPI(Resource):
             user_id = get_jwt_identity()
             user = User.query.filter(User.id == user_id).first()
             if not user.permissions == 'admin':
-                return 'Do not have permissions', 401
+                return jsonify('Do not have permissions'), 401
 
             params = request.json
             item = Event.query.filter(Event.id == event_id).first()
             if not item:
-                return "Invalid ID supplied", 402
+                return jsonify("Invalid ID supplied"), 402
 
             for key, value in params.items():
                 setattr(item, key, value)
             session.commit()
             session.close()
 
-            return 'Successful operation', 200
+            return jsonify('Successful operation'), 200
         except Exception:
-            return 'Unsuccessful operation', 403
+            return jsonify('Unsuccessful operation'), 403
 
     @jwt_required()
     def delete(self, event_id):
@@ -69,19 +69,19 @@ class EventParamAPI(Resource):
             user_id = get_jwt_identity()
             user = User.query.filter(User.id == user_id).first()
             if not user.permissions == 'admin':
-                return 'Do not have permissions', 401
+                return jsonify('Do not have permissions'), 401
 
             item = Event.query.filter(Event.id == event_id).first()
             if not item:
-                return 'Invalid ID supplied', 402
+                return jsonify('Invalid ID supplied'), 402
 
             session.delete(item)
             session.commit()
             session.close()
 
-            return 'Successful operation', 200
+            return jsonify('Successful operation'), 200
         except Exception:
-            return 'Unsuccessful operation', 403
+            return jsonify('Unsuccessful operation'), 403
 
 
 evquery.add_url_rule('/event', view_func=EventAPI.as_view("eventAPI"))
