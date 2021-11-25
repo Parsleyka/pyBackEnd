@@ -11,7 +11,7 @@ def get_tickets(event_id):
     try:
         tickets = Ticket.query.filter(Ticket.id_event == event_id)
         if not tickets:
-            return 'Invalid ID supplied', 402
+            return jsonify('Invalid ID supplied'), 401
 
         serialised = []
         for ticket in tickets:
@@ -22,7 +22,7 @@ def get_tickets(event_id):
             })
         return jsonify(serialised), 200
     except Exception:
-        return 'Unsuccessful operation', 403
+        return jsonify('Unsuccessful operation'), 403
 
 
 @tiquery.route('/ticket', methods=['POST'])
@@ -32,7 +32,7 @@ def post_ticket():
         user_id = get_jwt_identity()
         user = User.query.filter(User.id == user_id).first()
         if not user.permissions == 'admin':
-            return 'Do not have permissions', 401
+            return jsonify('Do not have permissions'), 401
 
         new_ticket = Ticket(**request.json)
         new_ticket.status = 'valid'
@@ -40,9 +40,9 @@ def post_ticket():
         session.commit()
         session.close()
 
-        return 'Successful operation', 200
+        return jsonify('Successful operation'), 200
     except Exception:
-        return 'Unsuccessful operation', 403
+        return jsonify('Unsuccessful operation'), 403
 
 
 @tiquery.route('/ticket/buy/<int:ticket_id>', methods=['POST'])
@@ -53,15 +53,15 @@ def post_new_bought_ticket(ticket_id):
 
         ticket = Ticket.query.filter(Ticket.id == ticket_id).first()
         if not ticket:
-            return 'Invalid ID supplied', 401
+            return jsonify('Invalid ID supplied'), 401
 
         if ticket.status == 'bought':
-            return 'Ticket is bought', 402
+            return jsonify('Ticket is bought'), 402
 
         if ticket.status == 'reserved':
             reserved_ticket = ReservedTicket.query.filter(ReservedTicket.id_ticket == ticket_id).first()
             if not reserved_ticket.id_user == user_id:
-                return 'Ticket is reserved', 405
+                return jsonify('Ticket is reserved'), 405
             session.delete(reserved_ticket)
             session.commit()
 
@@ -73,9 +73,9 @@ def post_new_bought_ticket(ticket_id):
         session.commit()
         session.close()
 
-        return 'Successful operation', 200
+        return jsonify('Successful operation'), 200
     except Exception:
-        return 'Unsuccessful operation', 403
+        return jsonify('Unsuccessful operation'), 403
 
 
 @tiquery.route('/ticket/reserve/<int:ticket_id>', methods=['POST'])
@@ -86,10 +86,10 @@ def post_reserved_ticket(ticket_id):
 
         ticket = Ticket.query.filter(Ticket.id == ticket_id).first()
         if not ticket:
-            return 'Invalid ID supplied', 401
+            return jsonify('Invalid ID supplied'), 401
 
         if not ticket.status == 'valid':
-            return 'Ticket is invalid', 402
+            return jsonify('Ticket is invalid'), 402
 
         new_reserved_ticket = ReservedTicket(id_ticket=ticket_id, id_user=user_id)
         session.add(new_reserved_ticket)
@@ -99,9 +99,9 @@ def post_reserved_ticket(ticket_id):
         session.commit()
         session.close()
 
-        return 'Successful operation', 200
+        return jsonify('Successful operation'), 200
     except Exception:
-        return 'Unsuccessful operation', 403
+        return jsonify('Unsuccessful operation'), 403
 
 
 @tiquery.route('/fixticket/<int:ticket_id>', methods=['PUT'])
@@ -111,13 +111,13 @@ def put_ticket(ticket_id):
         user_id = get_jwt_identity()
         user = User.query.filter(User.id == user_id).first()
         if not user.permissions == 'admin':
-            return 'Do not have permissions', 401
+            return jsonify('Do not have permissions'), 401
 
         params = request.json
 
         item = Ticket.query.filter(Ticket.id == ticket_id).first()
         if not item:
-            return "Invalid ID supplied", 402
+            return jsonify('Invalid ID supplied'), 402
 
         for key, value in params.items():
             setattr(item, key, value)
@@ -125,9 +125,9 @@ def put_ticket(ticket_id):
         session.commit()
         session.close()
 
-        return 'Successful operation', 200
+        return jsonify('Successful operation'), 200
     except Exception:
-        return 'Unsuccessful operation', 403
+        return jsonify('Unsuccessful operation'), 403
 
 
 @tiquery.route('/ticket/reserve/cancel/<int:ticket_id>', methods=['DELETE'])
@@ -140,7 +140,7 @@ def delete_reserved_ticket(ticket_id):
                                                       ReservedTicket.id_ticket == ticket_id).first()
 
         if not reserved_ticket:
-            return 'You do not have reservation', 402
+            return jsonify('You do not have reservation'), 402
 
         ticket = Ticket.query.filter(Ticket.id == ticket_id).first()
         ticket.status = 'valid'
@@ -149,6 +149,6 @@ def delete_reserved_ticket(ticket_id):
         session.commit()
         session.close()
 
-        return 'Successful operation', 200
+        return jsonify('Successful operation'), 200
     except Exception:
-        return 'Unsuccessful operation', 403
+        return jsonify('Unsuccessful operation'), 403
